@@ -1,3 +1,4 @@
-python-telegram-bot[job-queue]==21.6
-requests
-httpx
+httpx[socks]  # Для работы с Tor через SOCKS5-прокси
+python-telegram-bot  # Для работы с Telegram-ботом
+requests  # Для запросов к VK API
+sqlite3  # Для работы с базой данных (встроенная в Python, но может понадобиться для установки)

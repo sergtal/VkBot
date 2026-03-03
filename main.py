@@ -15,53 +15,53 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Mess
 
 # ================= ПРОКСИ =================
 
-TOR_PATH = os.path.join("tor/", "tor.exe")
-TORRC_PATH = os.path.join("tor/", "torrc")
+# TOR_PATH = os.path.join("tor/", "tor.exe")
+# TORRC_PATH = os.path.join("tor/", "torrc")
 
-def tor_is_running():
-    try:
-        s = socket.create_connection(("127.0.0.1", 9050), timeout=2)
-        s.close()
-        return True
-    except:
-        return False
+# def tor_is_running():
+#     try:
+#         s = socket.create_connection(("127.0.0.1", 9050), timeout=2)
+#         s.close()
+#         return True
+#     except:
+#         return False
 
-def start_tor():
-    try:
-        if tor_is_running():
-            print("Tor already running")
-            return
+# def start_tor():
+#     try:
+#         if tor_is_running():
+#             print("Tor already running")
+#             return
 
-        print("Starting Tor...")
-        process = subprocess.Popen(
-            [TOR_PATH, "-f", TORRC_PATH],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
-        stdout, stderr = process.communicate()
+#         print("Starting Tor...")
+#         process = subprocess.Popen(
+#             [TOR_PATH, "-f", TORRC_PATH],
+#             stdout=subprocess.PIPE,
+#             stderr=subprocess.PIPE
+#         )
+#         stdout, stderr = process.communicate()
         
-        if stdout:
-            print(stdout.decode())
-        if stderr:
-            print(stderr.decode())
+#         if stdout:
+#             print(stdout.decode())
+#         if stderr:
+#             print(stderr.decode())
 
-        for i in range(30):
-            if tor_is_running():
-                print("Tor started")
-                return process  # Возвращаем объект процесса Tor
-            time.sleep(1)
+#         for i in range(30):
+#             if tor_is_running():
+#                 print("Tor started")
+#                 return process  # Возвращаем объект процесса Tor
+#             time.sleep(1)
 
-        raise RuntimeError("Tor failed to start")
-    except Exception as e:
-        logging.error(f"Ошибка при запуске Tor: {e}")
-        raise
+#         raise RuntimeError("Tor failed to start")
+#     except Exception as e:
+#         logging.error(f"Ошибка при запуске Tor: {e}")
+#         raise
 
-def stop_tor(process):
-    try:
-        process.terminate()  # Останавливаем Tor процесс
-        print("Tor stopped successfully.")
-    except Exception as e:
-        logging.error(f"Ошибка при остановке Tor: {e}")
+# def stop_tor(process):
+#     try:
+#         process.terminate()  # Останавливаем Tor процесс
+#         print("Tor stopped successfully.")
+#     except Exception as e:
+#         logging.error(f"Ошибка при остановке Tor: {e}")
 
 # ================= VK API =================
 
@@ -111,13 +111,13 @@ async def comment(pid, text):
 # ================= БАЗА =================
 
 def is_done(pid):
-    with sqlite3.connect("processed_posts.db") as db:
+    with sqlite3.connect(DB_FILE) as db:
         cur = db.cursor()
         cur.execute("SELECT id FROM posts WHERE id=?", (pid,))
         return cur.fetchone()
 
 def mark_done(pid):
-    with sqlite3.connect("processed_posts.db") as db:
+    with sqlite3.connect(DB_FILE) as db:
         cur = db.cursor()
         cur.execute(
             "INSERT INTO posts VALUES (?,?)",
